@@ -1,4 +1,4 @@
-from imports import *
+from files.imports import *
 
 CATEGORIES = []
 USERS = []
@@ -90,6 +90,11 @@ def write_to_file(array, directory="logs", filename='', default_key="JSON"):
 
         with open(path, 'w') as file:
             json.dump({default_key: result}, file, indent=4)
+
+
+@app.route("/")
+def index():
+    return "Welcome to Flask App!"
 
 
 @app.route("/categories")
