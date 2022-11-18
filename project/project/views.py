@@ -1,4 +1,4 @@
-from files.imports import *
+from imports import *
 
 CATEGORIES = []
 USERS = []
