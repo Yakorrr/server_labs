@@ -209,4 +209,3 @@ def get_user_records():
 
 fill_users()
 index()
-
