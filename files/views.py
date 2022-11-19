@@ -175,6 +175,11 @@ def create_record():
 
 
 @app.route("/user-records")
+def show_user_records():
+    return jsonify({"Users Records": GET_RECORDS_RESULTS})
+
+
+@app.route("/user-record")
 def get_user_records():
     request_user_id = request.get_json()
     user_number = request_user_id.get("User")
