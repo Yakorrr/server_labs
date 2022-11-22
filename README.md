@@ -21,7 +21,31 @@ Also, in the *Customize installation* section, all the checkboxes must be checke
 
 ![image](https://user-images.githubusercontent.com/85063387/203262505-1c42719a-0683-41db-a896-48f827b97ee6.png)
 
-:heavy_check_mark: 
+Optionally, you can change the installation path, add a shortcut to the desktop, and so on. After selecting the *Advanced options*, click **Install** to start installation.
+
+:heavy_check_mark: If the previous steps were successful, now you should verify the Python installation:
+
+- [X] Open the command prompt.
+- [X] Type `python` and press enter.
+- [X] The version of the python which you have installed will be displayed if the python is successfully installed on your windows.
+
+![image](https://user-images.githubusercontent.com/85063387/203280521-555eabb9-a417-4af7-890d-cc1ff483d2e1.png)
+
+Pip is a powerful package management system for Python software packages. Thus, make sure that you have it installed.
+
+- [X] Open the command prompt.
+- [X] Enter `pip --version` to check if pip was installed.
+- [X] The following output appears if pip is installed successfully.
+
+![image](https://user-images.githubusercontent.com/85063387/203281511-8d7e4c6d-e5b9-46ea-9968-1040f006bb7d.png)
+
+So, the last step is to install Docker. You can download it from [here](https://docs.docker.com/get-docker/).
+
+Docker can be quite difficult to install and use, especially for beginners. An easy and quick way to install it on [Windows 10](https://www.youtube.com/watch?v=PHYRSPCD69U&t=367s&ab_channel=%D0%9A%D0%BE%D0%BC%D0%BF%D1%8C%D1%8E%D1%82%D0%B5%D1%80-%D1%8D%D1%82%D0%BE%D0%BF%D1%80%D0%BE%D1%81%D1%82%D0%BE%21) and [Linux](https://www.youtube.com/watch?v=l6nSkqEwab0&ab_channel=Kodprog-%D0%BB%D0%B8%D0%BD%D1%83%D0%BA%D1%81%2C%D0%B2%D0%B5%D0%B1-%D1%80%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BA%D0%B0) can be found here.
+
+As I said, Docker requires a virtual machine to work, which will be installed and automatically displayed in the virtualization program. I recommend using VirtualBox for these purposes ([link](https://www.virtualbox.org/wiki/Downloads) to the installer, installation [instructions](https://www.youtube.com/watch?v=sB_5fqiysi4&ab_channel=TechGumbo)).
+
+You now have everything you need to run the application. Let's start!
 
 ## 2. Start
 
