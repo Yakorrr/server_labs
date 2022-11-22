@@ -49,18 +49,90 @@ There are many different programs for developing in Python, but the most conveni
 
 You now have everything you need to run the application. Let's start!
 
-## 2. Start
+## 2. Launch application using Python
 
-After installing, you need to clone this repository to your local machine. For this step you can use as command line, as Git Bash:
+:exclamation: **Note!** The instructions for installing and running the project locally apply to Windows only.
 
-`$ git clone https://github.com/Yakorrr/server_labs`
+1. After installing, you need to clone this repository to your local machine. For this step you can use as command line, as Git Bash:
+
+```
+$ git clone https://github.com/Yakorrr/server_labs
+```
 
 ![image](https://user-images.githubusercontent.com/85063387/203257692-b289ec23-57f9-4f28-8b03-2e982dec32eb.png)
 
+2. Create a new PyCharm project, then change to the specified directory and create a virtual environment. Starting from this step, you must use the command line of your operating system:
+
+```
+cd <project folder>
+python3 -m venv env
+```
+
+3. Activate the virtual environment using an *activate* script:
+
+```
+cd venv/Scripts
+activate
+```
+
+At this point, the console output should look something like this:
+
+![image](https://user-images.githubusercontent.com/85063387/203399285-3d05ad0d-a69c-480f-9459-84aed7d01d63.png)
+
+4. Installing auxiliary modules - *Flask* and *names* using *pip*:
+
+```
+pip install flask
+pip install names
+```
+
+5. Usually, all project dependencies are written to a special file called *requirements.txt*. This can be done with the following command:
+
+```
+pip freeze > requirements.txt
+```
+
+:exclamation: **Note!** The file must be in the root folder of the project.
+
+The repository already has such a file, so you don't need to do this.
+
+6. Now you need to copy the contents from the repository to the root folder of the project using the command:
+
+```
+xcopy <repository directory> <project directory> /e /h /q
+```
+
+The `xcopy` command has several additional parameters:
+
+- /e – Copy subdirectories, including any empty ones.
+- /h - Copy files with hidden and system file attributes.
+- /q - Hides the information output.
+
+The result should be the following:
+
+![image](https://user-images.githubusercontent.com/85063387/203405934-089cf7f2-563d-460e-baaf-98f8cafd7ffd.png)
+
+7. Now you can run the Flask application using terminal in PyCharm. Just copy the following commands and paste them into the terminal menu:
+
+```
+$env: FLASK_APP = 'files'
+flask run
+```
+
+Or you can do another way:
+
+```
+flask run -host 0.0.0.0 -p <your port>
+```
+
+I used 5000-th port, but you can choose another one.
+
+8. Well done! Now you can see this application running in your browser. You can enter the host address manually or follow the link from PyCharm:
+
+![image](https://user-images.githubusercontent.com/85063387/203408975-76dadf47-ea30-4dc6-bf64-505b8399cb93.png)
+![image](https://user-images.githubusercontent.com/85063387/203408984-20ae8b26-7a6f-48f8-bf28-220153c22324.png)
 
 
-Change to the project folder:
 
-`$ cd server_labs`
 
 
