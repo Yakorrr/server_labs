@@ -192,7 +192,11 @@ The output should be like this:
 
 ## 4. Conclusion
 
-To sum up, we were able to run the project locally using Python and Docker. Enjoy yourself! :wink:
+To sum up, we were able to run the project locally using Python and Docker.
+
+I also add a [link](https://serverlabs.herokuapp.com/) to the project deployed on heroku.
+
+Enjoy yourself! :wink:
 
 
 
