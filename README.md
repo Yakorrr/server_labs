@@ -2,8 +2,7 @@ This repository contains labs from the discipline 'Server Software Development T
 
 ## 1. Preparation
 
-To run the application correctly, you will need additional utilities: Python with the pip module, Git Bash, and Docker. Docker also needs a virtual machine to get up and running.
-
+To run the application correctly, you will need additional utilities: Python with the pip module, Git Bash, and Docker. Docker also needs a virtual machine to get up and running, therefore, it's better to additionally download and install any virtualization program (for example, VirtualBox or VMware).
 
 Before you install Git, it's a good idea to check to see if you already have it installed. To check whether or not you have git installed, simply open a terminal window and type `git --version`.
 
