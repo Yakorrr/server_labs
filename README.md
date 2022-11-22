@@ -45,16 +45,22 @@ Docker can be quite difficult to install and use, especially for beginners. An e
 
 As I said, Docker requires a virtual machine to work, which will be installed and automatically displayed in the virtualization program. I recommend using VirtualBox for these purposes ([link](https://www.virtualbox.org/wiki/Downloads) to the installer, installation [instructions](https://www.youtube.com/watch?v=sB_5fqiysi4&ab_channel=TechGumbo)).
 
+There are many different programs for developing in Python, but the most convenient one, in my opinion, is PyCharm. It can be downloaded from [here](https://www.jetbrains.com/pycharm/download/#section=windows).
+
 You now have everything you need to run the application. Let's start!
 
 ## 2. Start
 
-After installing, you need to clone this repository to your local machine:
+After installing, you need to clone this repository to your local machine. For this step you can use as command line, as Git Bash:
 
 `$ git clone https://github.com/Yakorrr/server_labs`
 
 ![image](https://user-images.githubusercontent.com/85063387/203257692-b289ec23-57f9-4f28-8b03-2e982dec32eb.png)
 
+
+
 Change to the project folder:
 
 `$ cd server_labs`
+
+
