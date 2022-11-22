@@ -1,8 +1,8 @@
-This repository contains labs from the discipline 'Server Software Development Technologies'. Below are the instructions for running the web application on Windows and Linux platforms.
+This repository contains labs from the discipline 'Server Software Development Technologies'. Below are the instructions for running the web application on Windows and Linux platforms locally.
 
 ## 1. Preparation
 
-To run the application correctly, you will need additional utilities: Python with the pip module, Git Bash, and Docker. Docker also needs a virtual machine to get up and running, therefore, it's better to additionally download and install any virtualization program (for example, VirtualBox or VMware).
+To run the application correctly, you will need additional utilities: Python with the pip module, Git Bash, and Docker. Docker also requires a virtual machine to get up and running, therefore, it's better to additionally download and install any virtualization program (for example, VirtualBox or VMware).
 
 Before you install Git, it's a good idea to check to see if you already have it installed. To check whether or not you have git installed, simply open a terminal window and type `git --version`.
 
@@ -47,7 +47,7 @@ As I said, Docker requires a virtual machine to work, which will be installed an
 
 There are many different programs for developing in Python, but the most convenient one, in my opinion, is PyCharm. It can be downloaded from [here](https://www.jetbrains.com/pycharm/download/#section=windows).
 
-You now have everything you need to run the application. Let's start!
+You now have everything needed to run the application. Let's start!
 
 ## 2. Launch application using Python
 
@@ -92,11 +92,11 @@ pip install names
 pip freeze > requirements.txt
 ```
 
-:exclamation: **Note!** The file must be in the root folder of the project.
+:exclamation: **Note!** The file must be in the root directory of the project.
 
-The repository already has such a file, so you don't need to do this.
+The repository already has such a file, so this action is optional.
 
-6. Now you need to copy the contents from the repository to the root folder of the project using the command:
+6. Now you need to copy the contents from the repository to the root directory of the project using the command:
 
 ```
 xcopy <repository directory> <project directory> /e /h /q
@@ -132,6 +132,67 @@ I used 5000-th port, but you can choose another one.
 ![image](https://user-images.githubusercontent.com/85063387/203408975-76dadf47-ea30-4dc6-bf64-505b8399cb93.png)
 ![image](https://user-images.githubusercontent.com/85063387/203408984-20ae8b26-7a6f-48f8-bf28-220153c22324.png)
 
+
+## 3. Launch application using Docker
+
+At the very beginning, we installed Docker. Now let's try to run the application with it.
+
+1. Move to the root directory of your project using Docker Terminal:
+
+![image](https://user-images.githubusercontent.com/85063387/203415088-f735c3f1-8b34-4e8a-8de1-9b8bf2eecbe2.png)
+
+:exclamation: **Note!** Keep these notes in mind when working with Docker Terminal:
+
+  1. On the Windows command line, when specifying an absolute or relative path (for example, with the `cd` command), the backslash character `\` is used to separate directory names. Docker Terminal, on the other hand, uses the forward slash `/` symbol.
+  2. If the directory name contains spaces, it must be enclosed in single `''` or double `""` brackets.
+
+2. Run the following command:
+
+```
+docker build --build-arg PORT=5000 . -t application:latest
+```
+
+The `docker build` command [builds](https://docs.docker.com/engine/reference/commandline/build/#:~:text=The%20docker%20build%20command%20builds,a%20file%20in%20the%20context.) Docker images from a Dockerfile and a “context”. A build’s context is the set of files located in the specified `PATH` or `URL`.
+
+The output should be like this:
+
+![image](https://user-images.githubusercontent.com/85063387/203418108-4c0648c9-4381-496e-b3e7-aadd00e13887.png)
+
+3. Now you need to build your Docker container using this command:
+
+```
+docker-compose build
+```
+
+Services are built once and then tagged, by default as `project_service`.
+
+If the Compose file specifies an [image](https://github.com/compose-spec/compose-spec/blob/master/spec.md#image) name, the image is tagged with that name, substituting any variables beforehand. See [variable interpolation](https://github.com/compose-spec/compose-spec/blob/master/spec.md#interpolation).
+
+So, if you change a service’s `Dockerfile` or the contents of its build directory, run `docker-compose build` to rebuild it.
+
+The output should be like this:
+
+![image](https://user-images.githubusercontent.com/85063387/203419234-6918b87a-7354-4d21-accd-100fdc0064ed.png)
+
+4. Finally, you need to run your Docker container using the following command:
+
+```
+docker-compose up
+```
+
+The `docker-compose up` command aggregates the output of each container (like `docker-compose logs --follow` does). When the command exits, all containers are stopped. Running `docker-compose up --detach` starts the containers in the background and leaves them running.
+
+If there are existing containers for a service, and the service’s configuration or image was changed after the container’s creation, `docker-compose up` picks up the changes by stopping and recreating the containers (preserving mounted volumes). To prevent Compose from picking up changes, use the `--no-recreate` flag.
+
+The output should be like this:
+
+![image](https://user-images.githubusercontent.com/85063387/203422953-2d6ffa4d-5599-41b6-a2d6-03f21c6aac99.png)
+
+5. Well done! Now you can see this application running in Docker container. You can check the responses from the application in Docker Terminal.
+
+## 4. Conclusion
+
+To sum up, we were able to run the project locally using Python and Docker. Enjoy yourself! :wink:
 
 
 
