@@ -1,18 +1,9 @@
 from files.imports import *
 
-
 CATEGORIES = []
 USERS = []
 RECORDS = []
 RECORDS_RESULTS = {}
-
-
-def create_user_data():
-    return {"ID": uuid.uuid4().hex, "Username": names.get_first_name()}
-
-
-def fill_users():
-    for i in range(5): USERS.append(create_user_data())
 
 
 def exists(array, element, default_key="ID"):
@@ -102,7 +93,7 @@ def create_user():
     else: abort(404, message="Bad request: Username not found!")
 
     if not exists(USERS, temp_username, default_key="Username"):
-        USERS.append({"ID": create_user_data().get("ID"), "Username": temp_username})
+        USERS.append({"ID": uuid.uuid4().hex, "Username": temp_username})
     else: abort(400, message="This username is already used.")
 
     return jsonify(request_user_data)
@@ -184,5 +175,4 @@ def get_user_records():
     return jsonify({key: user_records_temp})
 
 
-fill_users()
 index()
