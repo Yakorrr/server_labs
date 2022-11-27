@@ -137,8 +137,7 @@ def create_record():
             temp = request_record_data.get(i)
 
             if i == "Category":
-                for elem in CATEGORIES:
-                    temp = temp if elem.get("ID") != temp or elem.get("Name") != temp else elem.get("Name")
+                for elem in CATEGORIES: temp = temp if elem.get("ID") != temp else elem.get("Name")
 
             temp_array.append(temp)
         else: abort(404, message="Bad request: %s not found!" % i)
