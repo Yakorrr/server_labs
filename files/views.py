@@ -1,5 +1,6 @@
 from files.imports import *
 
+
 CATEGORIES = []
 USERS = []
 RECORDS = []
@@ -7,30 +8,11 @@ GET_RECORDS_RESULTS = {}
 
 
 def create_user_data():
-    def count_digits(number):
-        digits = 0
-
-        if number == 0: return 1
-        while number > 0:
-            number //= 10
-            digits += 1
-
-        return digits
-
-    temp = math.floor(random.random() * 1e6)
-    user_id = temp if temp >= 1e5 else temp * int(1e6 // 10 ** count_digits(temp))
-    user_name = names.get_first_name()
-
-    return {"ID": user_id, "Name": user_name}
+    return {"ID": uuid.uuid4().hex, "Username": names.get_first_name()}
 
 
 def fill_users():
-    for i in range(5):
-        temp_user = create_user_data()
-
-        while USERS.count(temp_user.get("ID")) > 0: temp_user = create_user_data()
-
-        USERS.append(temp_user)
+    for i in range(5): USERS.append(create_user_data())
 
 
 def exists(array, element, default_key="ID"):
@@ -49,24 +31,14 @@ def exists(array, element, default_key="ID"):
     return False
 
 
+def validate(request, obj):
+    if obj not in request: return False
+
+    return True
+
+
 def get_array_string(array):
     return str(array).replace("'", '"')
-
-
-def create_date(date_string):
-    formats = ["%d/%m/%Y", "%d %b %Y", "%d %B %Y"]
-    time_format = '%H:%M:%S'
-
-    date = re.sub(r'[-\n.]', "/", date_string)
-    time = datetime.now().strftime(time_format) if date.count(" ") % 2 == 0 else ''
-
-    for i in formats:
-        try:
-            return str(datetime.strptime(date + (" " + time if len(time) != 0 else time),
-                                         i + " " + time_format))
-        except ValueError: pass
-
-    raise ValueError()
 
 
 def write_to_file(array, directory="logs", filename='', default_key="JSON"):
@@ -108,11 +80,15 @@ def get_categories():
 @app.route("/category", methods=['POST'])
 def create_category():
     request_categories_data = request.get_json()
-    temp_name = request_categories_data.get("Name")
+    temp_name = ''
+
+    if validate(request_categories_data, "Name"):
+        temp_name = request_categories_data.get("Name")
+    else: abort(404, message="Bad request: Category name not found!")
 
     if not exists(CATEGORIES, temp_name, default_key="Name"):
-        CATEGORIES.append(dict({"ID": len(CATEGORIES) + 1, "Name": temp_name}))
-    else: return jsonify("This category is already exists.")
+        CATEGORIES.append({"ID": len(CATEGORIES) + 1, "Name": temp_name})
+    else: abort(400, message="This category is already exists.")
 
     return jsonify(request_categories_data)
 
@@ -128,12 +104,15 @@ def get_users():
 @app.route("/user", methods=['POST'])
 def create_user():
     request_user_data = request.get_json()
-    temp_id = create_user_data().get("ID")
+    temp_username = ''
 
-    # Check if created id is free. If not -> new id
-    while exists(USERS, temp_id): temp_id = create_user_data().get("ID")
+    if validate(request_user_data, "Username"):
+        temp_username = request_user_data.get("Username")
+    else: abort(404, message="Bad request: Username not found!")
 
-    USERS.append({"ID": int(temp_id), "Name": request_user_data.get("Name")})
+    if not exists(USERS, temp_username, default_key="Username"):
+        USERS.append({"ID": create_user_data().get("ID"), "Username": temp_username})
+    else: abort(400, message="This username is already used.")
 
     return jsonify(request_user_data)
 
@@ -149,27 +128,31 @@ def get_records():
 @app.route("/record", methods=['POST'])
 def create_record():
     request_record_data = request.get_json()
+    keys = ["Username", "Category", "Amount"]
+    temp_array = []
+    temp_dict = {}
 
-    # 'User ID' and 'Category Name' must be greater than 0
-    if request_record_data.get("ID_User") <= 0:
-        return jsonify("User ID must be greater than zero!")
-    elif request_record_data.get("ID_Category") <= 0:
-        return jsonify("Category ID must be greater than zero!")
+    for i in keys:
+        if validate(request_record_data, i):
+            temp = request_record_data.get(i)
+
+            if i == "Category":
+                for elem in CATEGORIES:
+                    temp = temp if elem.get("ID") != temp or elem.get("Name") != temp else elem.get("Name")
+
+            temp_array.append(temp)
+        else: abort(404, message="Bad request: %s not found!" % i)
+
+    if not exists(USERS, temp_array[0], default_key="Username"):
+        abort(404, message="This user doesn't exist.")
+    elif not exists(CATEGORIES, temp_array[1], default_key="Name"):
+        abort(404, message="This category doesn't exist.")
     else:
-        # If user doesn't exist -> not found
-        if not exists(USERS, request_record_data.get("ID_User"), default_key="Name"):
-            return jsonify("This user doesn't exist.")
-        # If category doesn't exist -> not found
-        elif not exists(CATEGORIES, request_record_data.get("ID_Category")):
-            return jsonify("This category doesn't exist.")
-        else:
-            try:
-                temp_dict = {"User ID": USERS[request_record_data.get("ID_User") - 1].get("ID"),
-                             "Category Name": CATEGORIES[request_record_data.get("ID_Category") - 1].get("Name"),
-                             "Date": create_date(request_record_data.get("Date")),
-                             "Amount": request_record_data.get("Amount")}
-                RECORDS.append(temp_dict)
-            except ValueError: return jsonify("Unsupported date format. Please try again.")
+        for i in keys:
+            temp_dict[i] = temp_array[keys.index(i)]
+            if keys.index(i) == 1: temp_dict["Date"] = datetime.now()
+
+        RECORDS.append(temp_dict)
 
     return jsonify(temp_dict)
 
