@@ -1,0 +1,7 @@
+CATEGORIES = []
+
+USERS = []
+
+RECORDS = []
+
+RECORDS_RESULTS = {}

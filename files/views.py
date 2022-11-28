@@ -1,10 +1,19 @@
 from files.imports import *
+from files.db import *
 
-CATEGORIES = []
-USERS = []
-RECORDS = []
-RECORDS_RESULTS = {}
+from files.resources.user import blp as UserBlueprint
 
+app.config["PROPAGATE_EXCEPTIONS"] = True
+app.config["API_TITLE"] = "Finance REST API"
+app.config["API_VERSION"] = "v1.1.0"
+app.config["OPENAPI_VERSION"] = "3.0.3"
+app.config["OPENAPI_URL_PREFIX"] = "/"
+app.config["OPENAPI_SWAGGER_UI_PATH"] = "/swagger-ui"
+app.config["OPENAPI_SWAGGER_UI_URL"] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
+
+
+api = Api(app)
+api.register_blueprint(UserBlueprint)
 
 def exists(array, element, default_key="ID"):
     """
@@ -62,6 +71,7 @@ def get_categories():
 @app.route("/category", methods=['POST'])
 def create_category():
     request_categories_data = request.get_json()
+    temp_category = {}
     temp_name = ''
 
     if validate(request_categories_data, "Name"):
@@ -69,34 +79,11 @@ def create_category():
     else: abort(404, message="Bad request: Category name not found!")
 
     if not exists(CATEGORIES, temp_name, default_key="Name"):
-        CATEGORIES.append({"ID": len(CATEGORIES) + 1, "Name": temp_name})
+        temp_category = {"ID": len(CATEGORIES) + 1, "Name": temp_name}
+        CATEGORIES.append(temp_category)
     else: abort(400, message="This category is already exists.")
 
-    return jsonify(request_categories_data)
-
-
-@app.route("/users")
-def get_users():
-    default_key = "Users"
-    write_to_file(USERS, default_key=default_key, filename='users.json')
-
-    return jsonify({default_key: USERS})
-
-
-@app.route("/user", methods=['POST'])
-def create_user():
-    request_user_data = request.get_json()
-    temp_username = ''
-
-    if validate(request_user_data, "Username"):
-        temp_username = request_user_data.get("Username")
-    else: abort(404, message="Bad request: Username not found!")
-
-    if not exists(USERS, temp_username, default_key="Username"):
-        USERS.append({"ID": uuid.uuid4().hex, "Username": temp_username})
-    else: abort(400, message="This username is already used.")
-
-    return jsonify(request_user_data)
+    return jsonify(temp_category)
 
 
 @app.route("/records")
