@@ -39,7 +39,6 @@ class RecordList(MethodView):
 
     @blp.arguments(RecordSchema)
     def post(self, request_record_data):
-        keys = ["Username", "Category", "Amount"]
         username = request_record_data.get("Username")
         category = request_record_data.get("Category")
         record = {}
