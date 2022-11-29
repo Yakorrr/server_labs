@@ -4,22 +4,22 @@ from files.db import USERS
 
 blp = Blueprint("user", __name__, description="Operations on user")
 
-@blp.route("/user/<string:user_id>")
+@blp.route("/user/<string:username>")
 class User(MethodView):
     @staticmethod
-    def get(user_id):
+    def get(username):
         try:
-            return USERS[user_id]
+            return USERS[username]
         except ValueError:
             abort(404, message="User not found")
 
     @staticmethod
     def delete(user_id):
         try:
-            temp_user = USERS[user_id]
+            deleted_user = USERS[user_id]
             del USERS[user_id]
 
-            return temp_user
+            return deleted_user
         except KeyError:
             abort(404, message="User not found")
 
@@ -27,24 +27,23 @@ class User(MethodView):
 class UserList(MethodView):
     @staticmethod
     def get():
-        default_key = "Users"
-        view.write_to_file(USERS, default_key=default_key, filename='users.json')
+        view.write_to_file(USERS, default_key="Users", filename='users.json')
 
-        return {default_key: USERS}
+        return list(USERS.values())
 
     @staticmethod
     def post():
         request_user_data = request.get_json()
-        temp_user = {}
-        temp_username = ''
+        user = {}
+        username = ''
 
         if view.validate(request_user_data, "Username"):
-            temp_username = request_user_data.get("Username")
+            username = request_user_data.get("Username")
         else: abort(404, message="Bad request: Username not found!")
 
-        if not view.exists(USERS, temp_username, default_key="Username"):
-            temp_user = {"ID": uuid.uuid4().hex, "Username": temp_username}
-            USERS.append(temp_user)
+        if not view.exists(USERS, username, default_key="Username"):
+            user = {"ID": uuid.uuid4().hex, "Username": username}
+            USERS[username] = user
         else: abort(400, message="This username is already used.")
 
-        return jsonify(temp_user)
+        return user
