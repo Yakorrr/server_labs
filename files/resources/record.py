@@ -1,4 +1,5 @@
 from files.imports import *
+from files.schemas import *
 import files.functions as func
 from files.db import USERS, CATEGORIES, RECORDS
 
@@ -36,27 +37,23 @@ class RecordList(MethodView):
 
         return func.get_records_by_filter(lambda x: x["Username"] == username)
 
-    @staticmethod
-    def post():
-        request_record_data = request.get_json()
+    @blp.arguments(RecordSchema)
+    def post(self, request_record_data):
         keys = ["Username", "Category", "Amount"]
-        data = []
+        username = request_record_data.get("Username")
+        category = request_record_data.get("Category")
         record = {}
 
-        for i in keys:
-            if func.validate(request_record_data, i):
-                data.append(request_record_data.get(i))
-            else: abort(404, message="Bad request: %s not found!" % i)
-
-        if not func.exists(USERS, data[0], default_key="Username"):
+        if not func.exists(USERS, username, default_key="Username"):
             abort(404, message="This user doesn't exist.")
-        elif not func.exists(CATEGORIES, data[1], default_key="Name"):
+        elif not func.exists(CATEGORIES, category, default_key="Name"):
             abort(404, message="This category doesn't exist.")
         else:
-            record["ID"] = len(RECORDS) + 1
-            for i in keys:
-                record[i] = data[keys.index(i)]
-                if keys.index(i) == 1: record["Date"] = datetime.now().strftime("%Y-%m-%d, %H:%M:%S")
+            record = {
+                "ID": len(RECORDS) + 1,
+                **request_record_data,
+                "Date": datetime.now().strftime("%Y-%m-%d, %H:%M:%S")
+            }
 
             RECORDS[str(uuid.uuid4().hex)] = record
 

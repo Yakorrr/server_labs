@@ -1,4 +1,5 @@
 from files.imports import *
+from files.schemas import *
 import files.functions as func
 from files.db import CATEGORIES
 
@@ -23,16 +24,10 @@ class CategoryList(MethodView):
 
         return list(CATEGORIES.values())
 
-    @staticmethod
-    def post():
-        request_categories_data = request.get_json()
+    @blp.arguments(CategorySchema)
+    def post(self, request_categories_data):
         category = {}
-        name = ''
-
-        if func.validate(request_categories_data, "Name"):
-            name = request_categories_data.get("Name")
-        else:
-            abort(404, message="Bad request: Category name not found!")
+        name = request_categories_data.get("Name")
 
         if not func.exists(CATEGORIES, name, default_key="Name"):
             category = {"ID": len(CATEGORIES) + 1, "Name": name}

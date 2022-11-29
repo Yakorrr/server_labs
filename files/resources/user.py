@@ -1,4 +1,5 @@
 from files.imports import *
+from files.schemas import *
 import files.functions as func
 from files.db import USERS
 
@@ -33,21 +34,14 @@ class UserList(MethodView):
 
         return list(USERS.values())
 
-    @staticmethod
-    def post():
-        request_user_data = request.get_json()
+    @blp.arguments(UserSchema)
+    def post(self, request_user_data):
         user = {}
-        username = ''
-
-        if func.validate(request_user_data, "Username"):
-            username = request_user_data.get("Username")
-        else:
-            abort(404, message="Bad request: Username not found!")
+        username = request_user_data.get("Username")
 
         if not func.exists(USERS, username, default_key="Username"):
             user = {"ID": uuid.uuid4().hex, "Username": username}
             USERS[username] = user
-        else:
-            abort(400, message="This username is already used.")
+        else: abort(400, message="This username is already used.")
 
         return user
