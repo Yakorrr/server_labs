@@ -1,8 +1,9 @@
 from files.imports import *
-import files.views as view
+import files.functions as func
 from files.db import USERS
 
 blp = Blueprint("user", __name__, description="Operations on user")
+
 
 @blp.route("/user/<string:username>")
 class User(MethodView):
@@ -23,11 +24,12 @@ class User(MethodView):
         except KeyError:
             abort(404, message="User not found")
 
+
 @blp.route("/user")
 class UserList(MethodView):
     @staticmethod
     def get():
-        view.write_to_file(USERS, default_key="Users", filename='users.json')
+        func.write_to_file(list(USERS.values()), default_key="Users", filename='users.json')
 
         return list(USERS.values())
 
@@ -37,13 +39,15 @@ class UserList(MethodView):
         user = {}
         username = ''
 
-        if view.validate(request_user_data, "Username"):
+        if func.validate(request_user_data, "Username"):
             username = request_user_data.get("Username")
-        else: abort(404, message="Bad request: Username not found!")
+        else:
+            abort(404, message="Bad request: Username not found!")
 
-        if not view.exists(USERS, username, default_key="Username"):
+        if not func.exists(USERS, username, default_key="Username"):
             user = {"ID": uuid.uuid4().hex, "Username": username}
             USERS[username] = user
-        else: abort(400, message="This username is already used.")
+        else:
+            abort(400, message="This username is already used.")
 
         return user
