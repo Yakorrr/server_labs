@@ -1,7 +1,7 @@
-CATEGORIES = []
+CATEGORIES = {}
 
-USERS = []
+USERS = {}
 
-RECORDS = []
+RECORDS = {}
 
 RECORDS_RESULTS = {}
