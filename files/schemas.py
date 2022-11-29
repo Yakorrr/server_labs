@@ -2,17 +2,17 @@ from marshmallow import Schema, fields
 
 
 class UserSchema(Schema):
-    id = fields.Str(dump_only=True)
-    username = fields.Str(required=True)
+    ID = fields.Str(dump_only=True)
+    Username = fields.Str(required=True)
 
 
 class CategorySchema(Schema):
-    id = fields.Str(dump_only=True)
-    name = fields.Str(required=True)
+    ID = fields.Str(dump_only=True)
+    Name = fields.Str(required=True)
 
 
 class RecordSchema(Schema):
-    id = fields.Str(dump_only=True)
-    username = fields.Str(required=True)
-    category = fields.Str(required=True)
-    amount = fields.Float(required=True)
+    ID = fields.Str(dump_only=True)
+    Username = fields.Str(required=True)
+    Category = fields.Str(required=True)
+    Amount = fields.Float(required=True)
