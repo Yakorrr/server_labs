@@ -8,8 +8,8 @@ blp = Blueprint("category", __name__, description="Operations on category")
 
 @blp.route("/category/<string:category_name>")
 class Category(MethodView):
-    @staticmethod
-    def get(category_name):
+    @blp.response(200, CategorySchema)
+    def get(self, category_name):
         try:
             return CATEGORIES[category_name]
         except ValueError:
@@ -18,13 +18,14 @@ class Category(MethodView):
 
 @blp.route("/category")
 class CategoryList(MethodView):
-    @staticmethod
-    def get():
+    @blp.response(200, CategorySchema(many=True))
+    def get(self):
         func.write_to_file(list(CATEGORIES.values()), default_key="Categories", filename='categories.json')
 
         return list(CATEGORIES.values())
 
     @blp.arguments(CategorySchema)
+    @blp.response(200, CategorySchema)
     def post(self, request_categories_data):
         category = {}
         name = request_categories_data.get("Name")

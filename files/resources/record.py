@@ -8,8 +8,8 @@ blp = Blueprint("record", __name__, description="Operations on record")
 
 @blp.route("/record/<string:record_id>")
 class Record(MethodView):
-    @staticmethod
-    def get(record_id):
+    @blp.response(200, RecordSchema)
+    def get(self, record_id):
         try:
             return RECORDS[record_id]
         except ValueError:
@@ -18,15 +18,15 @@ class Record(MethodView):
 
 @blp.route("/record")
 class RecordList(MethodView):
-    @staticmethod
-    def get():
-        args = request.args.to_dict()
-        username = args.get("Username")
+    @blp.arguments(RecordQuery, location="query", as_kwargs=True)
+    @blp.response(200, RecordSchema(many=True))
+    def get(self, **kwargs):
+        username = kwargs.get("Username")
 
         if not username:
             abort(400, "Bad request: Username needed")
 
-        category_name = args.get("Category")
+        category_name = kwargs.get("Category")
 
         if category_name:
             return func.get_records_by_filter(
@@ -38,22 +38,21 @@ class RecordList(MethodView):
         return func.get_records_by_filter(lambda x: x["Username"] == username)
 
     @blp.arguments(RecordSchema)
+    @blp.response(200, RecordSchema)
     def post(self, request_record_data):
-        username = request_record_data.get("Username")
-        category = request_record_data.get("Category")
-        record = {}
-
-        if not func.exists(USERS, username, default_key="Username"):
+        if not func.exists(USERS, request_record_data["Username"], default_key="Username"):
             abort(404, message="This user doesn't exist.")
-        elif not func.exists(CATEGORIES, category, default_key="Name"):
+        if not func.exists(CATEGORIES, request_record_data["Category"], default_key="Name"):
             abort(404, message="This category doesn't exist.")
-        else:
-            record = {
-                "ID": len(RECORDS) + 1,
-                **request_record_data,
-                "Date": datetime.now().strftime("%Y-%m-%d, %H:%M:%S")
-            }
 
-            RECORDS[str(uuid.uuid4().hex)] = record
+        record_id = uuid.uuid4().hex
+
+        record = {
+            "ID": record_id,
+            **request_record_data,
+            "Date": datetime.now().strftime("%Y-%m-%d, %H:%M:%S"),
+        }
+
+        RECORDS[record_id] = record
 
         return record

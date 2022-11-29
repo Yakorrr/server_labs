@@ -35,4 +35,4 @@ def write_to_file(array, directory="logs", filename='', default_key="JSON"):
 
 
 def get_records_by_filter(filter_function):
-    return jsonify(list(filter(filter_function, RECORDS.values())))
+    return list(filter(filter_function, RECORDS.values()))

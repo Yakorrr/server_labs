@@ -7,8 +7,13 @@ class UserSchema(Schema):
 
 
 class CategorySchema(Schema):
-    ID = fields.Str(dump_only=True)
+    ID = fields.Int(dump_only=True)
     Name = fields.Str(required=True)
+
+
+class RecordQuery(Schema):
+    Username = fields.Str(required=True)
+    Category = fields.Str()
 
 
 class RecordSchema(Schema):

@@ -8,15 +8,15 @@ blp = Blueprint("user", __name__, description="Operations on user")
 
 @blp.route("/user/<string:username>")
 class User(MethodView):
-    @staticmethod
-    def get(username):
+    @blp.response(200, UserSchema)
+    def get(self, username):
         try:
             return USERS[username]
         except ValueError:
             abort(404, message="User not found")
 
-    @staticmethod
-    def delete(user_id):
+    @blp.response(200, UserSchema)
+    def delete(self, user_id):
         try:
             deleted_user = USERS[user_id]
             del USERS[user_id]
@@ -28,13 +28,14 @@ class User(MethodView):
 
 @blp.route("/user")
 class UserList(MethodView):
-    @staticmethod
-    def get():
+    @blp.response(200, UserSchema(many=True))
+    def get(self):
         func.write_to_file(list(USERS.values()), default_key="Users", filename='users.json')
 
         return list(USERS.values())
 
     @blp.arguments(UserSchema)
+    @blp.response(200, UserSchema)
     def post(self, request_user_data):
         user = {}
         username = request_user_data.get("Username")
