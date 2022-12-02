@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields
+from files.imports import Schema, fields
 
 
 class UserSchema(Schema):
@@ -12,12 +12,12 @@ class CategorySchema(Schema):
 
 
 class RecordQuery(Schema):
-    Username = fields.Str(required=True)
-    Category = fields.Str()
+    User_ID = fields.Str(required=True)
+    Category_ID = fields.Str()
 
 
 class RecordSchema(Schema):
     ID = fields.Str(dump_only=True)
-    Username = fields.Str(required=True)
-    Category = fields.Str(required=True)
+    User_ID = fields.Str(required=True)
+    Category_ID = fields.Str(required=True)
     Amount = fields.Float(required=True)

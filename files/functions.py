@@ -1,18 +1,8 @@
-from files.imports import *
-from files.db import RECORDS
+from files.imports import json, os, RECORDS
 
 
-def exists(array, element, default_key="ID"):
-    for i in array.values():
-        if i.get(default_key) == element: return True
-
-    return False
-
-
-def validate(req, obj):
-    if obj not in req: return False
-
-    return True
+def exists(array, element):
+    return element in array
 
 
 def get_array_string(array):

@@ -1,7 +1,5 @@
-from files.imports import *
-from files.schemas import *
-import files.functions as func
-from files.db import CATEGORIES
+from files.imports import uuid, Blueprint, MethodView, CategorySchema, write_to_file, CATEGORIES
+
 
 blp = Blueprint("category", __name__, description="Operations on category")
 
@@ -9,31 +7,28 @@ blp = Blueprint("category", __name__, description="Operations on category")
 @blp.route("/category/<string:category_name>")
 class Category(MethodView):
     @blp.response(200, CategorySchema)
-    def get(self, category_name):
-        try:
-            return CATEGORIES[category_name]
-        except ValueError:
-            abort(404, message="Category not found")
+    def get(self, category_id):
+        return CATEGORIES[category_id]
 
 
 @blp.route("/category")
 class CategoryList(MethodView):
     @blp.response(200, CategorySchema(many=True))
     def get(self):
-        func.write_to_file(list(CATEGORIES.values()), default_key="Categories", filename='categories.json')
+        write_to_file(list(CATEGORIES.values()), default_key="Categories", filename='categories.json')
 
         return list(CATEGORIES.values())
 
     @blp.arguments(CategorySchema)
     @blp.response(200, CategorySchema)
     def post(self, request_categories_data):
-        category = {}
-        name = request_categories_data.get("Name")
+        category_id = uuid.uuid4().hex
 
-        if not func.exists(CATEGORIES, name, default_key="Name"):
-            category = {"ID": len(CATEGORIES) + 1, "Name": name}
-            CATEGORIES[name] = category
-        else:
-            abort(400, message="This category is already exists.")
+        category = {
+            "ID": category_id,
+            **request_categories_data
+        }
+
+        CATEGORIES[category_id] = category
 
         return category

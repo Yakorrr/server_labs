@@ -1,7 +1,5 @@
 from files.imports import *
-from files.schemas import *
-import files.functions as func
-from files.db import USERS, CATEGORIES, RECORDS
+
 
 blp = Blueprint("record", __name__, description="Operations on record")
 
@@ -21,28 +19,28 @@ class RecordList(MethodView):
     @blp.arguments(RecordQuery, location="query", as_kwargs=True)
     @blp.response(200, RecordSchema(many=True))
     def get(self, **kwargs):
-        username = kwargs.get("Username")
+        user_id = kwargs.get("User_ID")
 
-        if not username:
+        if not user_id:
             abort(400, "Bad request: Username needed")
 
-        category_name = kwargs.get("Category")
+        category_id = kwargs.get("Category_ID")
 
-        if category_name:
+        if category_id:
             return func.get_records_by_filter(
-                lambda x: (x["Username"] == username and x["Category"] == category_name)
+                lambda x: (x["User_ID"] == user_id and x["Category_ID"] == category_id)
             )
 
         func.write_to_file(list(RECORDS.values()), default_key="Records", filename='records.json')
 
-        return func.get_records_by_filter(lambda x: x["Username"] == username)
+        return func.get_records_by_filter(lambda x: x["User_ID"] == user_id)
 
     @blp.arguments(RecordSchema)
     @blp.response(200, RecordSchema)
     def post(self, request_record_data):
-        if not func.exists(USERS, request_record_data["Username"], default_key="Username"):
+        if not func.exists(USERS, request_record_data["User_ID"]):
             abort(404, message="This user doesn't exist.")
-        if not func.exists(CATEGORIES, request_record_data["Category"], default_key="Name"):
+        if not func.exists(CATEGORIES, request_record_data["Category_ID"]):
             abort(404, message="This category doesn't exist.")
 
         record_id = uuid.uuid4().hex

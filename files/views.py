@@ -1,8 +1,5 @@
-from files.imports import *
+from files.imports import app, Api, UserBlueprint, CategoryBlueprint, RecordBlueprint
 
-from files.resources.user import blp as UserBlueprint
-from files.resources.category import blp as CategoryBlueprint
-from files.resources.record import blp as RecordBlueprint
 
 app.config["PROPAGATE_EXCEPTIONS"] = True
 app.config["API_TITLE"] = "Finance REST API"
@@ -21,4 +18,3 @@ api.register_blueprint(RecordBlueprint)
 @app.route("/")
 def index():
     return "Welcome to Flask App!"
-
