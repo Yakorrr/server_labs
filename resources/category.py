@@ -1,4 +1,11 @@
-from files.imports import uuid, Blueprint, MethodView, CategorySchema, write_to_file, CATEGORIES
+import uuid
+
+from flask.views import MethodView
+from flask_smorest import Blueprint
+
+from functions import write_to_file
+from db import CATEGORIES
+from schemas import CategorySchema
 
 
 blp = Blueprint("category", __name__, description="Operations on category")
@@ -21,12 +28,12 @@ class CategoryList(MethodView):
 
     @blp.arguments(CategorySchema)
     @blp.response(200, CategorySchema)
-    def post(self, request_categories_data):
+    def post(self, request_category_data):
         category_id = uuid.uuid4().hex
 
         category = {
             "ID": category_id,
-            **request_categories_data
+            **request_category_data
         }
 
         CATEGORIES[category_id] = category

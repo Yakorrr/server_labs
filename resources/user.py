@@ -1,4 +1,11 @@
-from files.imports import uuid, Blueprint, MethodView, UserSchema, write_to_file, USERS
+import uuid
+
+from flask.views import MethodView
+from flask_smorest import Blueprint
+
+from functions import write_to_file
+from db import USERS
+from schemas import UserSchema
 
 
 blp = Blueprint("user", __name__, description="Operations on user")

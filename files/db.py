@@ -1,5 +1,0 @@
-CATEGORIES = {}
-
-USERS = {}
-
-RECORDS = {}

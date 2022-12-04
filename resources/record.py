@@ -1,4 +1,12 @@
-from files.imports import *
+import uuid
+from datetime import datetime
+
+from flask.views import MethodView
+from flask_smorest import Blueprint, abort
+
+from functions import *
+from db import *
+from schemas import RecordSchema, RecordQuerySchema
 
 
 blp = Blueprint("record", __name__, description="Operations on record")
@@ -16,7 +24,7 @@ class Record(MethodView):
 
 @blp.route("/record")
 class RecordList(MethodView):
-    @blp.arguments(RecordQuery, location="query", as_kwargs=True)
+    @blp.arguments(RecordQuerySchema, location="query", as_kwargs=True)
     @blp.response(200, RecordSchema(many=True))
     def get(self, **kwargs):
         user_id = kwargs.get("User_ID")
@@ -27,20 +35,20 @@ class RecordList(MethodView):
         category_id = kwargs.get("Category_ID")
 
         if category_id:
-            return func.get_records_by_filter(
+            return get_records_by_filter(
                 lambda x: (x["User_ID"] == user_id and x["Category_ID"] == category_id)
             )
 
-        func.write_to_file(list(RECORDS.values()), default_key="Records", filename='records.json')
+        write_to_file(list(RECORDS.values()), default_key="Records", filename='records.json')
 
-        return func.get_records_by_filter(lambda x: x["User_ID"] == user_id)
+        return get_records_by_filter(lambda x: x["User_ID"] == user_id)
 
     @blp.arguments(RecordSchema)
     @blp.response(200, RecordSchema)
     def post(self, request_record_data):
-        if not func.exists(USERS, request_record_data["User_ID"]):
+        if not exists(USERS, request_record_data["User_ID"]):
             abort(404, message="This user doesn't exist.")
-        if not func.exists(CATEGORIES, request_record_data["Category_ID"]):
+        if not exists(CATEGORIES, request_record_data["Category_ID"]):
             abort(404, message="This category doesn't exist.")
 
         record_id = uuid.uuid4().hex

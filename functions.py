@@ -1,4 +1,6 @@
-from files.imports import json, os, RECORDS
+import json
+import os
+from db import RECORDS
 
 
 def exists(array, element):
