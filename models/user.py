@@ -4,8 +4,8 @@ from db import db
 class UserModel(db.Model):
     __tablename__ = "user"
 
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(256), unique=True, nullable=False)
+    ID = db.Column(db.Integer, primary_key=True)
+    Username = db.Column(db.String(256), unique=True, nullable=False)
 
     record = db.relationship(
         "RecordModel",

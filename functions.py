@@ -1,10 +1,5 @@
 import json
 import os
-from db import RECORDS
-
-
-def exists(array, element):
-    return element in array
 
 
 def get_array_string(array):
@@ -24,7 +19,3 @@ def write_to_file(array, directory="logs", filename='', default_key="JSON"):
 
         with open(path, 'w') as file:
             json.dump({default_key: result}, file, indent=4)
-
-
-def get_records_by_filter(filter_function):
-    return list(filter(filter_function, RECORDS.values()))

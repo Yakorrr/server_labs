@@ -1,11 +1,9 @@
-import uuid
-from datetime import datetime
-
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
+from sqlalchemy.exc import IntegrityError
 
-from functions import *
 from db import *
+from models.record import RecordModel
 from schemas import RecordSchema, RecordQuerySchema
 
 
@@ -16,10 +14,7 @@ blp = Blueprint("record", __name__, description="Operations on record")
 class Record(MethodView):
     @blp.response(200, RecordSchema)
     def get(self, record_id):
-        try:
-            return RECORDS[record_id]
-        except ValueError:
-            abort(404, message="Record not found")
+        return RecordModel.query.get_or_404(record_id)
 
 
 @blp.route("/record")
@@ -32,33 +27,25 @@ class RecordList(MethodView):
         if not user_id:
             abort(400, "Bad request: Username needed")
 
+        query = RecordModel.query.filter(RecordModel.User_ID == user_id)
+
         category_id = kwargs.get("Category_ID")
 
         if category_id:
-            return get_records_by_filter(
-                lambda x: (x["User_ID"] == user_id and x["Category_ID"] == category_id)
-            )
+            query = query.filter(RecordModel.Category_ID == category_id)
 
-        write_to_file(list(RECORDS.values()), default_key="Records", filename='records.json')
+        # write_to_file(list(RECORDS.values()), default_key="Records", filename='records.json')
 
-        return get_records_by_filter(lambda x: x["User_ID"] == user_id)
+        return query.all()
 
     @blp.arguments(RecordSchema)
     @blp.response(200, RecordSchema)
-    def post(self, request_record_data):
-        if not exists(USERS, request_record_data["User_ID"]):
-            abort(404, message="This user doesn't exist.")
-        if not exists(CATEGORIES, request_record_data["Category_ID"]):
-            abort(404, message="This category doesn't exist.")
+    def post(self, record_data):
+        record = RecordModel(**record_data)
 
-        record_id = uuid.uuid4().hex
-
-        record = {
-            "ID": record_id,
-            **request_record_data,
-            "Date": datetime.now().strftime("%Y-%m-%d, %H:%M:%S"),
-        }
-
-        RECORDS[record_id] = record
-
+        try:
+            db.session.add(record)
+            db.session.commit()
+        except IntegrityError:
+            abort(400, message="Ooops, creating record went wrong!")
         return record
