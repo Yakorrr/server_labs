@@ -2,9 +2,9 @@ This repository contains labs from the discipline 'Server Software Development T
 
 ## 1. Preparation
 
-To run the application correctly, you will need additional utilities: Python with the pip module, Git Bash, and Docker. Docker also requires a virtual machine to get up and running, therefore, it's better to additionally download and install any virtualization program (for example, VirtualBox or VMware).
+To run the application correctly, you will need additional utilities: Python with the pip module, Git Bash, and Docker. Docker also requires a virtual machine to get up and running, therefore, it's better to additionally download and install any virtualization program (for example, VirtualBox or VMWare).
 
-Before you install Git, it's a good idea to check to see if you already have it installed. To check whether or not you have git installed, simply open a terminal window and type `git --version`.
+Before you install Git, it's a good idea to check to see if you already have it installed. To check whether you have git installed, simply open a terminal window and type `git --version`.
 
 ![image](https://user-images.githubusercontent.com/85063387/203256670-b10cdbb9-3959-4677-8370-8ae936e7f4b7.png)
 
@@ -45,7 +45,7 @@ Docker can be quite difficult to install and use, especially for beginners. An e
 
 As I said, Docker requires a virtual machine to work, which will be installed and automatically displayed in the virtualization program. I recommend using VirtualBox for these purposes ([link](https://www.virtualbox.org/wiki/Downloads) to the installer, installation [instructions](https://www.youtube.com/watch?v=sB_5fqiysi4&ab_channel=TechGumbo)).
 
-There are many different programs for developing in Python, but the most convenient one, in my opinion, is PyCharm. It can be downloaded from [here](https://www.jetbrains.com/pycharm/download/#section=windows).
+There are different programs for developing in Python, but the most convenient one, in my opinion, is PyCharm. It can be downloaded from [here](https://www.jetbrains.com/pycharm/download/#section=windows).
 
 You now have everything needed to run the application. Let's start!
 
@@ -146,6 +146,7 @@ At the very beginning, we installed Docker. Now let's try to run the application
   1. On the Windows command line, when specifying an absolute or relative path (for example, with the `cd` command), the backslash character `\` is used to separate directory names. Docker Terminal, on the other hand, uses the forward slash `/` symbol.
   2. If the directory name contains spaces, it must be enclosed in single `''` or double `""` brackets.
 
+
 2. Run the following command:
 
 ```
@@ -182,7 +183,7 @@ docker-compose up
 
 The `docker-compose up` command aggregates the output of each container (like `docker-compose logs --follow` does). When the command exits, all containers are stopped. Running `docker-compose up --detach` starts the containers in the background and leaves them running.
 
-If there are existing containers for a service, and the service’s configuration or image was changed after the container’s creation, `docker-compose up` picks up the changes by stopping and recreating the containers (preserving mounted volumes). To prevent Compose from picking up changes, use the `--no-recreate` flag.
+If there are existing containers for a service, and the service’s configuration or image was changed after the container’s creation, `docker-compose up` picks up the changes by stopping and recreating the containers (preserving mounted volumes). To prevent Compose of picking up changes, use the `--no-recreate` flag.
 
 The output should be like this:
 
@@ -193,6 +194,8 @@ The output should be like this:
 ## 4. Conclusion
 
 To sum up, we were able to run the project locally using Python and Docker.
+
+:exclamation: I have the third variant for the additional task.
 
 I also add a [link](https://serverlabs.herokuapp.com/) to the project deployed on heroku.
 
