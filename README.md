@@ -2,7 +2,7 @@ This repository contains labs from the discipline 'Server Software Development T
 
 ## 1. Preparation
 
-To run the application correctly, you will need additional utilities: Python with the pip module, Git Bash, and Docker. Docker also requires a virtual machine to get up and running, therefore, it's better to additionally download and install any virtualization program (for example, VirtualBox or VMWare).
+To run the application correctly, you will need additional utilities: Python with the pip module, Git Bash, Postman ot Insomnia to send requests and Docker. Docker also requires a virtual machine to get up and running, therefore, it's better to additionally download and install any virtualization program (for example, VirtualBox or VMWare).
 
 Before you install Git, it's a good idea to check to see if you already have it installed. To check whether you have git installed, simply open a terminal window and type `git --version`.
 
@@ -38,6 +38,8 @@ Pip is a powerful package management system for Python software packages. Thus, 
 - [X] The following output appears if pip is installed successfully.
 
 ![image](https://user-images.githubusercontent.com/85063387/203281511-8d7e4c6d-e5b9-46ea-9968-1040f006bb7d.png)
+
+Keeping on with the preparation, so we are going to install Postman. Here is a [link](https://www.postman.com/downloads/) to download the program. Follow the instructions inside to complete the installation.   
 
 So, the last step is to install Docker. You can download it from [here](https://docs.docker.com/get-docker/).
 
