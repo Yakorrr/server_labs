@@ -12,3 +12,9 @@ class UserModel(db.Model):
         back_populates="user",
         lazy="dynamic",
     )
+
+    account = db.relationship(
+        "AccountModel",
+        back_populates="user",
+        lazy="dynamic",
+    )

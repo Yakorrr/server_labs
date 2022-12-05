@@ -1,11 +1,11 @@
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
+from sqlalchemy import update, create_engine
 from sqlalchemy.exc import IntegrityError
 
 from db import *
-from models.record import RecordModel
+from models import RecordModel, AccountModel
 from schemas import RecordSchema, RecordQuerySchema
-
 
 blp = Blueprint("record", __name__, description="Operations on record")
 
@@ -34,18 +34,30 @@ class RecordList(MethodView):
         if category_id:
             query = query.filter(RecordModel.Category_ID == category_id)
 
-        # write_to_file(list(RECORDS.values()), default_key="Records", filename='records.json')
-
         return query.all()
 
     @blp.arguments(RecordSchema)
     @blp.response(200, RecordSchema)
     def post(self, record_data):
         record = RecordModel(**record_data)
+        user_id = record_data.get("User_ID")
+
+        engine = create_engine("sqlite:///data.db")
 
         try:
             db.session.add(record)
+
+            connection = engine.connect()
+            upd = AccountModel.update() \
+                .values({AccountModel.Balance: AccountModel.Balance -
+                        RecordModel.query.with_entities(RecordModel.Amount)
+                        .filter(RecordModel.User_ID == user_id)}) \
+                .where(AccountModel.User_ID == user_id)
+            # print(str(upd))
+            connection.execute(upd)
+
             db.session.commit()
         except IntegrityError:
             abort(400, message="Ooops, creating record went wrong!")
+
         return record

@@ -5,6 +5,7 @@ from db import db
 from resources.user import blp as UserBlueprint
 from resources.category import blp as CategoryBlueprint
 from resources.record import blp as RecordBlueprint
+from resources.account import blp as AccountBlueprint
 
 
 def create_app():
@@ -20,18 +21,14 @@ def create_app():
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db.init_app(app)
 
-    api = Api(app)
-
     with app.app_context():
         db.create_all()
+
+    api = Api(app)
 
     api.register_blueprint(UserBlueprint)
     api.register_blueprint(CategoryBlueprint)
     api.register_blueprint(RecordBlueprint)
+    api.register_blueprint(AccountBlueprint)
 
     return app
-
-
-# @app.route("/")
-# def index():
-#     return "Welcome to Flask App!"
