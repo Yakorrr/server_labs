@@ -1,10 +1,9 @@
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
-from sqlalchemy import update, create_engine
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, NoResultFound
 
-from db import *
-from models import RecordModel, AccountModel
+from db import db
+from models import RecordModel, AccountModel, CategoryModel
 from schemas import RecordSchema, RecordQuerySchema
 
 blp = Blueprint("record", __name__, description="Operations on record")
@@ -41,22 +40,24 @@ class RecordList(MethodView):
     def post(self, record_data):
         record = RecordModel(**record_data)
         user_id = record_data.get("User_ID")
-
-        engine = create_engine("sqlite:///data.db")
+        category_id = record_data.get("Category_ID")
 
         try:
+            account = AccountModel.query.filter(AccountModel.User_ID == user_id).one()
+            category = CategoryModel.query.filter(CategoryModel.ID == category_id).one()
+            consumption = account.Balance - record.Amount
+
+            if consumption >= 0:
+                account.Balance = consumption
+            else:
+                abort(400, message="Insufficient funds to complete the transaction")
+
+            db.session.add(category)
             db.session.add(record)
-
-            connection = engine.connect()
-            upd = AccountModel.update() \
-                .values({AccountModel.Balance: AccountModel.Balance -
-                        RecordModel.query.with_entities(RecordModel.Amount)
-                        .filter(RecordModel.User_ID == user_id)}) \
-                .where(AccountModel.User_ID == user_id)
-            # print(str(upd))
-            connection.execute(upd)
-
+            db.session.add(account)
             db.session.commit()
+        except NoResultFound:
+            abort(404, message="Data not found")
         except IntegrityError:
             abort(400, message="Ooops, creating record went wrong!")
 

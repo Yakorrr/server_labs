@@ -1,9 +1,9 @@
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, NoResultFound
 
 from db import db
-from models import AccountModel
+from models import AccountModel, UserModel
 from schemas import AccountSchema
 
 blp = Blueprint("account", __name__, description="Operations on account")
@@ -26,12 +26,23 @@ class AccountList(MethodView):
     @blp.response(200, AccountSchema)
     def post(self, account_data):
         account = AccountModel(**account_data)
+        user_id = account_data.get("User_ID")
 
         try:
+            user = UserModel.query.filter(UserModel.ID == user_id).one()
+
+            db.session.add(user)
             db.session.add(account)
             db.session.commit()
+        except NoResultFound:
+            abort(404, message="User not found")
         except IntegrityError:
-            abort(400, message="Account for User %s already exists!" %
-                               account_data.get("User_ID"))
+            db.session.rollback()
 
-        return account
+            account = AccountModel.query.filter(AccountModel.User_ID == user_id).one()
+            account.Balance += account_data.get("Balance")
+
+            db.session.add(account)
+            db.session.commit()
+        finally:
+            return account
