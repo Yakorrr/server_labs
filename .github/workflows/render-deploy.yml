@@ -13,5 +13,5 @@ jobs:
         with:
           email: ${{secrets.RENDER_EMAIL}}
           password: ${{secrets.RENDER_PASSWORD}}
-          toke: ${{secrets.RENDER_GITHUB_TOKEN}}
+          token: ${{secrets.RENDER_GITHUB_TOKEN}}
           service-id: srv-cepeb4en6mpoovlnv2r0
