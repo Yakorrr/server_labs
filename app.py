@@ -1,13 +1,14 @@
 from flask import Flask, jsonify
-from flask_smorest import Api, Blueprint
+from flask_smorest import Api
 
 from db import db
-from resources.user import blp as UserBlueprint
+from resources.account import blp as AccountBlueprint
 from resources.category import blp as CategoryBlueprint
 from resources.record import blp as RecordBlueprint
-from resources.account import blp as AccountBlueprint
+from resources.user import blp as UserBlueprint
 
-defaultPage = Blueprint("index", __name__, description="Default page")
+# defaultPage = Blueprint("index", __name__, description="Default page")
+defaultPage = Flask(__name__)
 
 
 def create_app():
@@ -39,6 +40,3 @@ def create_app():
 @defaultPage.route("/")
 def index():
     return jsonify("Welcome to the Flask App!")
-
-
-index()
