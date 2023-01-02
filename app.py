@@ -39,3 +39,6 @@ def create_app():
 @defaultPage.route("/")
 def index():
     return jsonify("Welcome to the Flask App!")
+
+
+index()
