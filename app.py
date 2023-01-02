@@ -1,5 +1,5 @@
-from flask import Flask
-from flask_smorest import Api
+from flask import Flask, jsonify
+from flask_smorest import Api, Blueprint
 
 from db import db
 from resources.user import blp as UserBlueprint
@@ -7,12 +7,14 @@ from resources.category import blp as CategoryBlueprint
 from resources.record import blp as RecordBlueprint
 from resources.account import blp as AccountBlueprint
 
+defaultPage = Blueprint("index", __name__, description="Default page")
+
 
 def create_app():
     app = Flask(__name__)
     app.config["PROPAGATE_EXCEPTIONS"] = True
     app.config["API_TITLE"] = "Finance REST API"
-    app.config["API_VERSION"] = "v1.1.0"
+    app.config["API_VERSION"] = "v2.0"
     app.config["OPENAPI_VERSION"] = "3.0.3"
     app.config["OPENAPI_URL_PREFIX"] = "/"
     app.config["OPENAPI_SWAGGER_UI_PATH"] = "/swagger-ui"
@@ -32,3 +34,8 @@ def create_app():
     api.register_blueprint(AccountBlueprint)
 
     return app
+
+
+@defaultPage.route("/")
+def index():
+    return jsonify("Welcome to the Flask App!")

@@ -26,10 +26,10 @@ class AccountList(MethodView):
     @blp.response(200, AccountSchema)
     def post(self, account_data):
         account = AccountModel(**account_data)
-        user_id = account_data.get("User_ID")
+        user_id = account_data.get("user_id")
 
         try:
-            user = UserModel.query.filter(UserModel.ID == user_id).one()
+            user = UserModel.query.filter(UserModel.id == user_id).one()
 
             db.session.add(user)
             db.session.add(account)
@@ -39,8 +39,8 @@ class AccountList(MethodView):
         except IntegrityError:
             db.session.rollback()
 
-            account = AccountModel.query.filter(AccountModel.User_ID == user_id).one()
-            account.Balance += account_data.get("Balance")
+            account = AccountModel.query.filter(AccountModel.user_id == user_id).one()
+            account.balance += account_data.get("balance")
 
             db.session.add(account)
             db.session.commit()

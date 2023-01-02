@@ -26,12 +26,12 @@ class RecordList(MethodView):
         if not user_id:
             abort(400, "Bad request: Username needed")
 
-        query = RecordModel.query.filter(RecordModel.User_ID == user_id)
+        query = RecordModel.query.filter(RecordModel.user_id == user_id)
 
         category_id = kwargs.get("Category_ID")
 
         if category_id:
-            query = query.filter(RecordModel.Category_ID == category_id)
+            query = query.filter(RecordModel.category_id == category_id)
 
         return query.all()
 
@@ -39,16 +39,16 @@ class RecordList(MethodView):
     @blp.response(200, RecordSchema)
     def post(self, record_data):
         record = RecordModel(**record_data)
-        user_id = record_data.get("User_ID")
-        category_id = record_data.get("Category_ID")
+        user_id = record_data.get("user_id")
+        category_id = record_data.get("category_id")
 
         try:
-            account = AccountModel.query.filter(AccountModel.User_ID == user_id).one()
-            category = CategoryModel.query.filter(CategoryModel.ID == category_id).one()
-            consumption = account.Balance - record.Amount
+            account = AccountModel.query.filter(AccountModel.user_id == user_id).one()
+            category = CategoryModel.query.filter(CategoryModel.id == category_id).one()
+            consumption = account.balance - record.amount
 
             if consumption >= 0:
-                account.Balance = consumption
+                account.balance = consumption
             else:
                 abort(400, message="Insufficient funds to complete the transaction")
 
