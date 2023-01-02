@@ -199,7 +199,7 @@ To sum up, we were able to run the project locally using Python and Docker.
 
 :exclamation: I have the third variant for the additional task.
 
-I also add a [link](https://serverlabs.herokuapp.com/) to the project deployed on heroku.
+I also add a [link](https://serverlabs.onrender.com/) to the project deployed on heroku.
 
 Enjoy yourself! :wink:
 
