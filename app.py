@@ -1,5 +1,5 @@
 from flask import Flask, jsonify
-from flask_smorest import Api
+from flask_smorest import Api, Blueprint
 
 from db import db
 from resources.account import blp as AccountBlueprint
@@ -7,11 +7,15 @@ from resources.category import blp as CategoryBlueprint
 from resources.record import blp as RecordBlueprint
 from resources.user import blp as UserBlueprint
 
-# defaultPage = Blueprint("index", __name__, description="Default page")
-defaultPage = Flask(__name__)
+defaultPage = Blueprint("", __name__, description="Default page")
+# defaultPage = Flask(__name__)
 
 
 def create_app():
+    @defaultPage.route("/")
+    def index():
+        return jsonify("Welcome to the Flask App!")
+
     app = Flask(__name__)
     app.config["PROPAGATE_EXCEPTIONS"] = True
     app.config["API_TITLE"] = "Finance REST API"
@@ -35,8 +39,3 @@ def create_app():
     api.register_blueprint(AccountBlueprint)
 
     return app
-
-
-@defaultPage.route("/")
-def index():
-    return jsonify("Welcome to the Flask App!")
