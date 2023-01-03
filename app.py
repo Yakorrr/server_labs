@@ -8,14 +8,12 @@ from resources.record import blp as RecordBlueprint
 from resources.user import blp as UserBlueprint
 
 defaultPage = Blueprint("", __name__, description="Default page")
+
+
 # defaultPage = Flask(__name__)
 
 
 def create_app():
-    @defaultPage.route("/")
-    def index():
-        return jsonify("Welcome to the Flask App!")
-
     app = Flask(__name__)
     app.config["PROPAGATE_EXCEPTIONS"] = True
     app.config["API_TITLE"] = "Finance REST API"
@@ -37,5 +35,11 @@ def create_app():
     api.register_blueprint(CategoryBlueprint)
     api.register_blueprint(RecordBlueprint)
     api.register_blueprint(AccountBlueprint)
+    api.register_blueprint(defaultPage)
 
     return app
+
+
+@defaultPage.route("/")
+def index():
+    return jsonify("Welcome to the Flask App!")
