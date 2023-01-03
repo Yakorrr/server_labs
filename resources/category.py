@@ -1,4 +1,5 @@
 from flask.views import MethodView
+from flask_jwt_extended import jwt_required
 from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import IntegrityError
 
@@ -11,6 +12,7 @@ blp = Blueprint("category", __name__, description="Operations on category")
 
 @blp.route("/category/<string:category_name>")
 class Category(MethodView):
+    @jwt_required()
     @blp.response(200, CategorySchema)
     def get(self, category_id):
         return CategoryModel.query.get_or_404(category_id)
@@ -18,10 +20,12 @@ class Category(MethodView):
 
 @blp.route("/category")
 class CategoryList(MethodView):
+    @jwt_required()
     @blp.response(200, CategorySchema(many=True))
     def get(self):
         return CategoryModel.query.all()
 
+    @jwt_required()
     @blp.arguments(CategorySchema)
     @blp.response(200, CategorySchema)
     def post(self, category_data):

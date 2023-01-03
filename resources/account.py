@@ -1,4 +1,5 @@
 from flask.views import MethodView
+from flask_jwt_extended import jwt_required
 from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import IntegrityError, NoResultFound
 
@@ -11,6 +12,7 @@ blp = Blueprint("account", __name__, description="Operations on account")
 
 @blp.route("/account/<string:account_id>")
 class Account(MethodView):
+    @jwt_required()
     @blp.response(200, AccountSchema)
     def get(self, account_id):
         return AccountModel.query.get_or_404(account_id)
@@ -18,10 +20,12 @@ class Account(MethodView):
 
 @blp.route("/account")
 class AccountList(MethodView):
+    @jwt_required()
     @blp.response(200, AccountSchema(many=True))
     def get(self):
         return AccountModel.query.all()
 
+    @jwt_required()
     @blp.arguments(AccountSchema)
     @blp.response(200, AccountSchema)
     def post(self, account_data):
@@ -44,5 +48,5 @@ class AccountList(MethodView):
 
             db.session.add(account)
             db.session.commit()
-        finally:
-            return account
+
+        return account
