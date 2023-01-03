@@ -7,7 +7,7 @@ from resources.category import blp as CategoryBlueprint
 from resources.record import blp as RecordBlueprint
 from resources.user import blp as UserBlueprint
 
-defaultPage = Blueprint("", __name__, description="Default page")
+defaultPage = Blueprint("index", __name__, description="Default page")
 
 
 # defaultPage = Flask(__name__)
@@ -31,11 +31,11 @@ def create_app():
 
     api = Api(app)
 
+    api.register_blueprint(defaultPage)
     api.register_blueprint(UserBlueprint)
     api.register_blueprint(CategoryBlueprint)
     api.register_blueprint(RecordBlueprint)
     api.register_blueprint(AccountBlueprint)
-    api.register_blueprint(defaultPage)
 
     return app
 
