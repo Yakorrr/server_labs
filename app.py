@@ -2,6 +2,7 @@ import os
 
 from flask import Flask, jsonify
 from flask_jwt_extended import JWTManager
+from flask_login import LoginManager
 from flask_smorest import Api, Blueprint
 
 from db import db
@@ -14,6 +15,8 @@ defaultPage = Blueprint("index", __name__, description="Default page")
 
 
 def create_app():
+    login_manager = LoginManager()
+
     app = Flask(__name__)
     app.config["PROPAGATE_EXCEPTIONS"] = True
     app.config["API_TITLE"] = "Finance REST API"
@@ -25,6 +28,8 @@ def create_app():
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///data.db"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
+
+    login_manager.init_app(app)
     db.init_app(app)
 
     with app.app_context():
@@ -35,7 +40,7 @@ def create_app():
     jwt = JWTManager(app)
 
     @jwt.expired_token_loader
-    def expired_token_callback(jwt_header, jwt_payload):
+    def expired_token_callback():
         return (
             jsonify({
                 "message": "The token has expired.",
@@ -45,7 +50,7 @@ def create_app():
         )
 
     @jwt.invalid_token_loader
-    def invalid_token_callback(error):
+    def invalid_token_callback():
         return (
             jsonify(
                 {
@@ -57,7 +62,7 @@ def create_app():
         )
 
     @jwt.unauthorized_loader
-    def missing_token_callback(error):
+    def missing_token_callback():
         return (
             jsonify(
                 {

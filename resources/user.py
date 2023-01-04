@@ -54,20 +54,22 @@ class AuthUser(MethodView):
 @blp.route("/auth/login")
 class LoginUser(MethodView):
     @blp.arguments(UserSchema)
-    @blp.response(200, UserSchema)
     def post(self, login_data):
         user = UserModel(**login_data)
         login_username = login_data.get("username")
-        access_token = None
+        access_token = ''
 
         try:
             login_user = UserModel.query.filter(UserModel.username == login_username).one()
 
             if login_user and pbkdf2_sha256.verify(login_data["password"], login_user.password):
                 access_token = create_access_token(identity=user.id)
+
+            db.session.add(login_user)
+            db.session.commit()
         except NoResultFound:
             abort(404, message="User not found")
         except IntegrityError:
             abort(400, message="Bad request. Please try again")
 
-        return access_token
+        return {"access_token": access_token}
